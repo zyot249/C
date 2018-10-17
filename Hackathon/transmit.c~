@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+//structure
+typedef struct point{
+  int a;
+  int b;
+  int c;
+}Point;
+
+typedef struct user{
+  char name[20];
+  char pubKey[10];
+  char pvtKey[10];
+  Point point;
+}User;
+
+typedef struct contract{
+  char senderPubKey[10];
+  char receiverPubKey[10];
+  char kindOfPoint;
+  int amount;
+}Contract;
+
+//Global var
+User users[10];
+
+//Function
+
+int checkSender(Contract contract)
+{
+  //Enter user's password
+  char pass[10];
+  printf("PLEASE enter your password:");
+  scanf("%s",pass);
+
+  //find
+  int i;
+  for(i = 0;i<10;i++){
+    if(strcmp(contract.senderPubKey,users[i].pubKey) == 0)
+      break;
+  }
+  if(i<10){
+    if(strcmp(pass,users[i].pvtKey) == 0)
+      return 1;
+    else return 0;
+  }
+  return 0;
+}
+
+int checkBalance(Contract contract){
+
+}
+
+void transmit(Contract contract)
+{
+  if(checkSender(contract) == 0)
+    return;
+  checkBalance();
+  exchange();
+}
+
+int main()
+{
+  return 0;
+}
