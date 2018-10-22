@@ -24,7 +24,7 @@ Jim Plank
 plank@cs.utk.edu
 http://www.cs.utk.edu/~plank
 
-Associate Professor
+Associate Professor3
 Department of Computer Science
 University of Tennessee
 203 Claxton Complex
