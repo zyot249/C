@@ -8,7 +8,8 @@
 /* Create an undirected graph
  */
 Graph createGraph(){
-
+  Graph g = make_jrb();
+  return g;
 }
 
 /* Add the edge between 2 vertices v1 and v2
