@@ -19,7 +19,7 @@ int main()
   printf("\nBFS: start from node 1 to  4 : ");
   BFS(g, 1, 4,printVertex);
   printf("\nDFS: start from node 1 to all : ");
-  DFS(g, 1, -1,printVertex);
+  DFS(g, 1, 4,printVertex);
   printf("\n");
   /*
   n = getAdjacentVertices(g,1,output);

@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "./dGraph.h"
+
+
+// Implementation APIs
+
+Graph createGraph(){
+  Graph g;
+  g.edges = make_jrb();
+  g.vertices = make_jrb(); 
