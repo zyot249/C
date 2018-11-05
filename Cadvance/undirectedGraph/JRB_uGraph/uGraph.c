@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "./uGraph.h"
 #include "../libfdr/jrb.h"
+#include "../libfdr/dllist.h"
 
 /* Implement Function
  */
@@ -80,5 +81,71 @@ void dropGraph(Graph graph){
  */
 
 void BFS(Graph graph,int start,int stop,void(*func)(int)){
+  JRB visited;
+  Dllist queue,node;
+  int n,i,u,v;
+  int* output = (int*)malloc(100*sizeof(int));
   
+  queue = new_dllist();
+  dll_append(queue,new_jval_i(start));
+  visited = make_jrb();
+
+  while(!dll_empty(queue)){
+    node = dll_first(queue);
+    u = jval_i(node->val);
+    dll_delete_node(node);
+
+    if( jrb_find_int(visited,u) == NULL){ // not yet visited
+      //visit u
+      func(u);
+      jrb_insert_int(visited,u,new_jval_i(1));
+      if( u == stop)
+	break;
+
+      //add adjacent of u to queue
+      n = getAdjacentVertices(graph,u,output);
+      for(i = 0;i<n;i++){
+	v = output[i];
+	if(jrb_find_int(visited,v) == NULL)
+	  dll_append(queue,new_jval_i(v));
+      }
+    }
+  }
+  jrb_free_tree(visited);
+  free(output);
+}
+
+void DFS(Graph graph,int start,int stop,void(*func)(int)){
+  JRB visited;
+  Dllist stack,node;
+  int n,i,u,v;
+  int* output = (int*)malloc(100*sizeof(int));
+  
+  stack = new_dllist();
+  dll_prepend(stack,new_jval_i(start));
+  visited = make_jrb();
+
+  while(!dll_empty(stack)){
+    node = dll_first(stack);
+    u = jval_i(node->val);
+    dll_delete_node(node);
+
+    if( jrb_find_int(visited,u) == NULL){ // not yet visited
+      //visit u
+      func(u);
+      jrb_insert_int(visited,u,new_jval_i(1));
+      if( u == stop)
+	break;
+
+      //add adjacent of u to queue
+      n = getAdjacentVertices(graph,u,output);
+      for(i = 0;i<n;i++){
+	v = output[i];
+	if(jrb_find_int(visited,v) == NULL)
+	  dll_prepend(stack,new_jval_i(v));
+      }
+    }
+  }
+  jrb_free_tree(visited);
+  free(output);
 }
