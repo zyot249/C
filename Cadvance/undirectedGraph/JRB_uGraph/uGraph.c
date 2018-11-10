@@ -66,6 +66,18 @@ int getAdjacentVertices(Graph graph,int v,int* output){
   }
   return count;
 }
+/* List adjacent of all Vertices
+ */
+void listGraph(Graph graph,int* output){
+  JRB node;
+  for(node = jrb_first(graph);node != jrb_nil(graph);node = jrb_next(node)){
+    int n = getAdjacentVertices(graph,jval_i(node->key),output);
+    printf("\nVertex %d ",jval_i(node->key));
+    if(n != 0)
+      for(int i = 0;i<n;i++)
+	printf("--> %d ",output[i]);
+  }
+}
 
 /* Drop an undirected graph
  */
