@@ -20,11 +20,10 @@ int main()
   add_edge(g, 1, 2);
   add_edge(g, 2, 0);
   add_edge(g, 1, 3);
-  /*
   if (DAG(g))
     printf("The graph is acycle\n");
   else printf("Have cycles in the graph\n");
-  */
+  
   printf("%s\n",get_vertex(g,1));
   printf("%d\n",has_edge(g,0,1));
   list_graph(g,output);

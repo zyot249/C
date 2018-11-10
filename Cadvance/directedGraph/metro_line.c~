@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "./dGraph.h"
+
+void print_menu(){
+  printf("Welcome to Metro Line Management!\n");
+  printf("1.\n");
+  printf("2.\n");
+  printf("3.\n");
+  printf("4.Exit Application\n");
+}
+
+void input_opt(int* opt){
+  int a;
+  printf("Your option :");
+  scanf("%d",&a);
+  *opt = a;
+}
+
+int main()
+{
+  int opt;
+  do{
+    print_menu();
+    input_opt(&opt);
+    switch(opt){
+    case 1:
+      {
+	break;
+      }
+    case 2:
+      {
+	break;
+      }
+    case 3:
+      {
+	break;
+      }  
+    case 4:
+      {
+	printf("Thanks for using! Goodbye!\n\n");
+	printf("_______________________________________________________\n");
+	break;
+      }
+    default:
+      printf("PLEASE choose the option from 1 to 4 !!\n");
+    }
+  return 0;
+}

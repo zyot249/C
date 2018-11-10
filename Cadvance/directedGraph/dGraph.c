@@ -195,5 +195,21 @@ void DFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
   free(output);
 }
 
+int dag_Check,dag_Start;
+
+void dag_visit(Graph graph,int v){
+  if(has_edge(graph,v,dag_Start))
+    dag_Check = 1;
+}
+
 int DAG(Graph graph){
-  
+  JRB node;
+  jrb_traverse(node,graph.vertices){
+    dag_Start = jval_i(node->key);
+    dag_Check = 0;
+    DFS(graph,dag_Start,-1,dag_visit);
+    if(dag_Check == 1) return 0;
+  }
+  return 1;
+}
+
