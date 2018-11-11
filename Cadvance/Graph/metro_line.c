@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./dGraph.h"
+#include "./Graph.h"
 #include <string.h>
 
 void print_menu(){
@@ -84,7 +84,7 @@ int get_key_vertex(Graph graph,char* name){
 int main()
 {
   int opt;
-  Graph graph = create_graph();
+  Graph graph = create_graph(0);
   int* output = (int*)malloc(100*sizeof(int));
   do{
     print_menu();

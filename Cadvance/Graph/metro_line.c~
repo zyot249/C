@@ -84,7 +84,7 @@ int get_key_vertex(Graph graph,char* name){
 int main()
 {
   int opt;
-  Graph graph = create_graph();
+  Graph graph = create_graph(1);
   int* output = (int*)malloc(100*sizeof(int));
   do{
     print_menu();

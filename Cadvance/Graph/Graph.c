@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./dGraph.h"
+#include "./Graph.h"
 
 
 // Implementation APIs
 
-Graph create_graph(){
+Graph create_graph(int kind){
   Graph g;
   g.edges = make_jrb();
-  g.vertices = make_jrb(); 
+  g.vertices = make_jrb();
+  g.kind = kind;
   return g;
 }
 
@@ -50,11 +51,23 @@ void add_edge(Graph graph,int v1,int v2){
       tree = make_jrb();
       jrb_insert_int(graph.edges,v1,new_jval_v(tree));
     }else
-      tree = jval_v(node1->val);
+      tree = (JRB)jval_v(node1->val);
     JRB check;
     check = jrb_find_int(tree,v2);
-    if(check == NULL)
+    if(check == NULL){
       jrb_insert_int(tree,v2,new_jval_i(1));
+      
+      // For undirected
+      if(graph.kind == 0){
+	node2 = jrb_find_int(graph.edges,v2);
+	if(node2 == NULL){
+	  tree = make_jrb();
+	  jrb_insert_int(graph.edges,v2,new_jval_v(tree));
+	}else
+	  tree = (JRB)jval_v(node2->val);
+	jrb_insert_int(tree,v1,new_jval_i(1));
+      }
+    }
   }
 }
 
@@ -113,9 +126,8 @@ void drop_graph(Graph graph){
 }
 
 void list_graph(Graph graph,int* output){
-  JRB node,tree,name;
-  tree = graph.vertices;
-  for(node = jrb_first(tree);node != jrb_nil(tree);node = jrb_next(node)){
+  JRB node,name;
+  jrb_traverse(node,graph.vertices){
     int v = jval_i(node->key);
     name = jrb_find_int(graph.vertices,v);
     printf("Vertex %s : ",jval_s(name->val));
@@ -198,6 +210,9 @@ void DFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
   free(output);
 }
 
+
+
+// For Directed Graph
 int dag_Check,dag_Start;
 
 void dag_visit(Graph graph,int v){
@@ -216,3 +231,102 @@ int DAG(Graph graph){
   return 1;
 }
 
+// Find Shortest Path
+void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
+  JRB visited,pred,tNode;
+  Dllist queue,qNode;
+  int* output = (int*)malloc(100*sizeof(int));
+  int u,v,n,k;
+  
+  visited = make_jrb();
+  pred = make_jrb();
+  queue = new_dllist();
+  dll_append(queue,new_jval_i(start));
+  jrb_insert_int(pred,start,new_jval_i(-1));
+
+  // Start BFS from start to stop
+  while(!dll_empty(queue)){
+    qNode = dll_first(queue);
+    u = jval_i(qNode->val);
+    dll_delete_node(qNode);
+
+    if(jrb_find_int(visited,u) == NULL){
+      jrb_insert_int(visited,u,new_jval_i(1));
+    }
+    
+    if(u == stop) break;
+    
+    n = outdegree(graph,u,output);
+    if(n != 0){
+      for(int i = 0;i < n;i++){
+	v = output[i];
+	if(jrb_find_int(visited,v) == NULL)
+	  if(jrb_find_int(pred,v) == NULL){
+	    jrb_insert_int(pred,v,new_jval_i(u));
+	    dll_append(queue,new_jval_i(v));
+	  }
+      }
+    }
+  }
+  
+  // Finish BFS
+  Dllist path = new_dllist();
+  tNode = jrb_find_int(pred,stop);
+  if(tNode == NULL){
+    printf("No Path!\n");
+    return;
+  }else{
+    dll_prepend(path,new_jval_i(stop));
+    k = jval_i(tNode->val);
+    while(k != start){
+      dll_prepend(path,new_jval_i(k));
+      tNode = jrb_find_int(pred,k);
+      k = jval_i(tNode->val);
+    }
+    dll_prepend(path,new_jval_i(k));
+  }
+  dll_traverse(qNode,path){
+    func(graph,jval_i(qNode->val));
+  }
+  printf("\n");
+  
+  jrb_free_tree(pred);
+  jrb_free_tree(visited);
+  free(output);
+}
+
+// Topological Sort
+int topol_sort(Graph graph, int *output){
+  JRB node;
+  JRB indegreeTable = make_jrb();
+  int cont, count, v;
+  
+  jrb_traverse(node, graph.vertices){
+    v = jval_i(node->key);
+    jrb_insert_int(indegreeTable, v, new_jval_i(indegree(graph, v, output)));
+  }
+  
+  count = 0;
+  cont = 1;
+  while(cont){
+    cont = 0;
+    jrb_traverse(node, indegreeTable){
+      if(jval_i(node->val) == 0){
+	cont = 1;
+	break;
+      }
+    }
+    
+    if(cont){
+      output[count++] = jval_i(node->key);
+      jrb_delete_node(node);
+      jrb_traverse(node, indegreeTable){
+	if(has_edge(graph, output[count-1], jval_i(node->key))){
+	  node->val = new_jval_i(jval_i(node->val) - 1);
+	}
+      }	
+    }
+  }
+  
+  return count;
+}
