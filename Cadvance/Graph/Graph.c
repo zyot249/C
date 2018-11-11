@@ -172,6 +172,7 @@ void BFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
     }
   }
   jrb_free_tree(visited);
+  free_dllist(queue);
   free(output);
 }
 
@@ -207,6 +208,7 @@ void DFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
     }
   }
   jrb_free_tree(visited);
+  free_dllist(stack);
   free(output);
 }
 
@@ -233,7 +235,7 @@ int DAG(Graph graph){
 
 // Find Shortest Path
 void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
-  JRB visited,pred,tNode;
+  JRB visited,pred,tNode; // in pred: node has : key is keyofNode and value is predecessor of this node when BFS
   Dllist queue,qNode;
   int* output = (int*)malloc(100*sizeof(int));
   int u,v,n,k;
@@ -261,6 +263,7 @@ void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
       for(int i = 0;i < n;i++){
 	v = output[i];
 	if(jrb_find_int(visited,v) == NULL)
+	  //add outdegree of u to pred,value of node v in pred is u
 	  if(jrb_find_int(pred,v) == NULL){
 	    jrb_insert_int(pred,v,new_jval_i(u));
 	    dll_append(queue,new_jval_i(v));
@@ -276,6 +279,7 @@ void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
     printf("No Path!\n");
     return;
   }else{
+    //find path in pred by finding predecessor
     dll_prepend(path,new_jval_i(stop));
     k = jval_i(tNode->val);
     while(k != start){
@@ -285,6 +289,7 @@ void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
     }
     dll_prepend(path,new_jval_i(k));
   }
+  // print result
   dll_traverse(qNode,path){
     func(graph,jval_i(qNode->val));
   }
@@ -293,6 +298,8 @@ void shortest_path(Graph graph,int start,int stop,void(*func)(Graph,int)){
   jrb_free_tree(pred);
   jrb_free_tree(visited);
   free(output);
+  free_dllist(queue);
+  free_dllist(path);
 }
 
 // Topological Sort
@@ -300,16 +307,19 @@ int topol_sort(Graph graph, int *output){
   JRB node;
   JRB indegreeTable = make_jrb();
   int cont, count, v;
-  
+
+  // add all vertices with their indegree to indegreeTable
   jrb_traverse(node, graph.vertices){
     v = jval_i(node->key);
     jrb_insert_int(indegreeTable, v, new_jval_i(indegree(graph, v, output)));
   }
-  
+
+  //loop
   count = 0;
   cont = 1;
   while(cont){
     cont = 0;
+    //Find the vertex has indegree = 0
     jrb_traverse(node, indegreeTable){
       if(jval_i(node->val) == 0){
 	cont = 1;
@@ -318,8 +328,10 @@ int topol_sort(Graph graph, int *output){
     }
     
     if(cont){
-      output[count++] = jval_i(node->key);
+      output[count++] = jval_i(node->key); // add found vertex Node to result
       jrb_delete_node(node);
+      
+      // find outdegree of vertex Node and decrease the indegree of them by 1
       jrb_traverse(node, indegreeTable){
 	if(has_edge(graph, output[count-1], jval_i(node->key))){
 	  node->val = new_jval_i(jval_i(node->val) - 1);
@@ -327,6 +339,7 @@ int topol_sort(Graph graph, int *output){
       }	
     }
   }
-  
+
+  jrb_free_tree(indegreeTable);
   return count;
 }
