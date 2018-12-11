@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "weightedGraph.h"
+#include "./weightedGraph.h"
 //Implement API
 
 Graph create_graph(){
@@ -92,7 +92,7 @@ int indegree(Graph graph,int v,int* output){
     jrb_traverse(node,graph.edges){
       JRB tmp = jval_v(node->val);
       if(jrb_find_int(tmp,v) != NULL)
-	output[count++] = jval_i(node->key);
+        output[count++] = jval_i(node->key);
     }
     return count;
   }
@@ -110,7 +110,7 @@ int outdegree(Graph graph,int v,int* output){
       int count = 0;
       JRB tree = jval_v(node->val);
       jrb_traverse(node,tree)
-	output[count++] = jval_i(node->key);
+        output[count++] = jval_i(node->key);
       return count;
     }
   }
