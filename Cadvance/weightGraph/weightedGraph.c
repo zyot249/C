@@ -13,15 +13,17 @@ Graph create_graph(){
 
 void add_vertex(Graph graph,int id,char* name){
   JRB node = jrb_find_int(graph.vertices,id);
-  if(node == NULL){//if not exist the node with key id
+  if(node == NULL){
     jrb_insert_int(graph.vertices,id,new_jval_s(strdup(name)));
+  }else{
+    printf("The vertex with id : %d existed!\n", id);
   }
 }
 
 char* get_vertex(Graph graph,int id){
   JRB node = jrb_find_int(graph.vertices,id);
   if(node == NULL){
-    return NULL; //if there doesnt exist the node with key id --> return NULL
+    return NULL;
   }else{
     char* name = strdup(jval_s(node->val));
     return name;
@@ -49,11 +51,20 @@ void add_edge(Graph graph,int v1,int v2,double weight){
       jrb_insert_int(graph.edges,v1,new_jval_v(tree));//insert node v1 to edges tree
     }else
       tree = (JRB)jval_v(node1->val);//if v1 existed 
-    JRB check;
-    check = jrb_find_int(tree,v2);//check the existence of the edge between v1 and v2
-    if(check == NULL){
+    if(jrb_find_int(tree,v2) == NULL){
       jrb_insert_int(tree,v2,new_jval_d(weight));//insert the edge with weight
     }
+  }
+}
+
+int has_edge(Graph graph,int v1,int v2){
+  JRB node1 = jrb_find_int(graph.edges,v1);
+  if(node1 == NULL)
+    return 0;
+  else{
+    JRB node2 = jrb_find_int((JRB)jval_v(node1->val),v2);
+    if(node2 == NULL) return 0;
+    else return 1;
   }
 }
 
@@ -113,6 +124,23 @@ int outdegree(Graph graph,int v,int* output){
         output[count++] = jval_i(node->key);
       return count;
     }
+  }
+}
+
+void list_graph(Graph graph,int* output){
+  JRB node,name;
+  jrb_traverse(node,graph.vertices){
+    int v = jval_i(node->key);
+    name = jrb_find_int(graph.vertices,v);
+    printf("Vertex %s : ",jval_s(name->val));
+    int n = outdegree(graph,v,output);
+    if(n != 0){
+      for(int i = 0;i<n;i++){
+        name = jrb_find_int(graph.vertices,output[i]);
+        printf("--> %s ",jval_s(name->val));
+      }
+    }
+    printf("\n");
   }
 }
 
@@ -226,6 +254,82 @@ double shortest_path(Graph graph,int s,int t,int* path,int* length){
 }
 
 
-//Shortest path teacher
+// BFS and DFS
+void BFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
+  JRB visited; // save the visited vertices
+  Dllist queue,node;
+  int u,v,i,n;
+  int* output = (int*)malloc(100*sizeof(int));
+
+  // Initialization
+  queue = new_dllist();
+  dll_append(queue,new_jval_i(start)); // add start vertex into queue to visit first
+  visited = make_jrb();
+
+  while(!dll_empty(queue)){
+    node = dll_first(queue); // dequeue
+    u = jval_i(node->val); // get value - key of vertex
+    dll_delete_node(node);
+
+    if(jrb_find_int(visited,u) == NULL){ // didn't visit
+      func(graph,u); // do sth on func
+      jrb_insert_int(visited,u,new_jval_i(1)); // add into visited tree
+      if(u == stop) break;
+
+      n = outdegree(graph,u,output); // get list of adjacent 
+      if(n != 0){
+      	for(i = 0;i < n;i++){ 
+        	v = output[i];
+        	if(jrb_find_int(visited,v) == NULL)
+          	dll_append(queue,new_jval_i(v)); // enqueue if not visited
+      	}
+      }
+    }
+  }
+
+  // free memory
+  jrb_free_tree(visited);
+  free_dllist(queue);
+  free(output);
+}
+
+void DFS(Graph graph,int start,int stop,void(*func)(Graph,int)){
+  JRB visited; // save the visited vertices
+  Dllist stack,node;
+  int u,n,i,v;
+  int* output = (int*)malloc(100*sizeof(int));
+
+  // Initialization
+  visited = make_jrb();
+  stack = new_dllist();
+  dll_prepend(stack,new_jval_i(start)); // add start vertex into stack to visit first
+
+  while(!dll_empty(stack)){
+    node = dll_first(stack); // pop
+    u = jval_i(node->val);	// get value - key of vertex
+    dll_delete_node(node);
+
+    if(jrb_find_int(visited,u) == NULL){ // didn't visit
+      func(graph,u); // do sth
+      jrb_insert_int(visited,u,new_jval_i(1)); // add into visited tree
+      if(u == stop)
+				break;
+
+      n = outdegree(graph,u,output); // get list of adjacent 
+      if(n != 0){
+ 				for(i = n-1;i >= 0;i--){
+	  			v = output[i];
+	  			if(jrb_find_int(visited,v) == NULL)
+	    			dll_prepend(stack,new_jval_i(v)); // put if not visited
+				}
+      }
+    }
+  }
+
+  // free memory
+  jrb_free_tree(visited);
+  free_dllist(stack);
+  free(output);
+}
 
 

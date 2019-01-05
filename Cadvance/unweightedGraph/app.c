@@ -11,7 +11,7 @@ void print_vertex(Graph graph,int u){
 
 int main()
 {
-  Graph g = create_graph(1);
+  Graph g = create_graph(0);
   int* output = (int*)malloc(100*sizeof(int));
   add_vertex(g, 0, "V0");
   add_vertex(g, 1, "V1");
@@ -64,10 +64,10 @@ int main()
     }
   }
   
-  int n = topol_sort(g,output);
-  for(int i = 0;i < n;i++)
-    print_vertex(g,output[i]);
-  printf("\n");
+  // int n = topol_sort(g,output);
+  // for(int i = 0;i < n;i++)
+  //   print_vertex(g,output[i]);
+  // printf("\n");
   
   // if (has_edge(g,0,10))
   // {

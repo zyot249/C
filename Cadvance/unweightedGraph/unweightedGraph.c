@@ -27,7 +27,6 @@ void add_vertex(Graph graph,int id,char* name){
 char* get_vertex(Graph graph,int id){
   JRB node = jrb_find_int(graph.vertices,id);
   if(node == NULL){
-    printf("No vertex with id %d\n",id);
     return NULL;
   }else{
     char* name = strdup(jval_s(node->val));

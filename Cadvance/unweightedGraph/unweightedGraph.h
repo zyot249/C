@@ -25,7 +25,7 @@ void list_graph(Graph graph,int* output); // List adjacent of all vertices of gr
 void BFS(Graph graph,int start,int stop,void(*func)(Graph,int));
 void DFS(Graph graph,int start,int stop,void(*func)(Graph,int));
 
-Dllist shortest_path(Graph graph,int start,int stop);
+Dllist shortest_path(Graph graph,int start,int stop); // using BFS
 
 //Function for Directed Graph
 int DAG(Graph graph); // check if Graph is DAG( directed graph without directed cycles

@@ -3,9 +3,15 @@
 #include <string.h>
 #include "./weightedGraph.h"
 
+void print_vertex(Graph graph,int u){
+  JRB node = jrb_find_int(graph.vertices,u);
+  printf("%6s",jval_s(node->val));
+}
+
 int main()
 {
   Graph g = create_graph();
+  int* output = (int*)malloc(100*sizeof(int));
   //add vertices
   add_vertex(g,1,"1");
   add_vertex(g,2,"2");
@@ -43,5 +49,13 @@ int main()
     for (int i=length-1; i >= 0; i--) printf("%4d", path[i]);
     printf("\nTotal weight: %g\n", weight);
   }
+  // result 1   6   3   5   8 (50)
+  list_graph(g,output);
+  printf("%s\n", "BFS: ");
+  BFS(g,1,-1,print_vertex);
+  printf("\n%s\n", "------------------------------------------------------------------");
+  printf("%s\n", "DFS: ");
+  DFS(g,1,-1,print_vertex);
+  printf("\n");
   return 0;
 }
