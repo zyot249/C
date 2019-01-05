@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./Graph.h"
+#include "./unweightedGraph.h"
+#include "./libfdr/dllist.h"
 
 void print_vertex(Graph graph,int u){
   JRB node = jrb_find_int(graph.vertices,u);
@@ -48,15 +49,31 @@ int main()
   //printf("%d\t",jval_i(node->val));
   //}
   //printf("\n");
-  printf("PATH:");
-  shortest_path(g,0,4,print_vertex);
-  printf("__________________________________\n");
-  /*
+  for (int i = 1; i < 6; ++i){
+    printf("PATH:");
+    Dllist shortestPath = shortest_path(g,0,i);
+    if(shortestPath != NULL){
+      Dllist qNode;
+      dll_traverse(qNode,shortestPath){
+        print_vertex(g,jval_i(qNode->val));
+      }
+      printf("\n");
+      printf("__________________________________\n");
+    }else{
+      printf("%s\n", "no path");
+    }
+  }
+  
   int n = topol_sort(g,output);
   for(int i = 0;i < n;i++)
     print_vertex(g,output[i]);
   printf("\n");
-  */
+  
+  // if (has_edge(g,0,10))
+  // {
+  //   printf("%s\n", "co kia");
+  // }
+
   drop_graph(g);
   free(output);
   return 0;

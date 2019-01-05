@@ -1,0 +1,21 @@
+slide 1 : about sorting : quick sort and 3-way quick sort
+slide 2 : generic programming (Intro)
+slide 3 : generic programming (Symbol Table)
+slide 4 : red-black tree
+		  jval
+		  (lib : libfdr {jval,jrb,dllist})
+slide 5 : B-Tree(lib : bt-5.0.0) URL : https://hydrus.org.uk/doc/bt/html/index.html
+slide 6 : undirected graph : - some defs
+							 - representation
+slide 7 : graph traversal : - BFS
+							- DFS
+slide 8 : directed graph : - some defs
+						   - applying BFS and DFS
+						   - Topological Sort
+slide 9 : weighted graph : - shortest path
+						   - relaxing
+						   - Dijkstra's algorithm
+slide 10 : del co
+slide 11 : data compression : Huffman code Algorithm
+slide 12 : data compression compress file - decode compressed file
+slide 13 : state space search 
