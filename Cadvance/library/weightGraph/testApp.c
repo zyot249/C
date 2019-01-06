@@ -10,7 +10,7 @@ void print_vertex(Graph graph,int u){
 
 int main()
 {
-  Graph g = create_graph();
+  Graph g = create_graph(0);
   int* output = (int*)malloc(100*sizeof(int));
   //add vertices
   add_vertex(g,1,"1");

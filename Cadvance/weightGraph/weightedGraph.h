@@ -9,10 +9,11 @@
 typedef struct{
   JRB edges;
   JRB vertices;
+  int kind;
 }Graph;
 
 //API
-Graph create_graph();
+Graph create_graph(int kind);
 void add_vertex(Graph graph,int id,char* name);
 char* get_vertex(Graph graph,int id);
 void add_edge(Graph graph,int v1,int v2,double weight); // edge from v1 --> v2 has weight
