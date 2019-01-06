@@ -1,0 +1,93 @@
+/*--------------Declaration BEGIN ---------------------------- */
+
+typedef int sortDataType;
+
+int mergeCmp(sortDataType a, sortDataType b) {
+
+	// a < b return(1) =>> increasing
+	// a > b return(1) =>> decreasing
+
+	if (a > b) return(1);
+
+	if (a == b) return(0);
+
+	return(-1);
+}
+
+/*--------------Declaration END  ----------------------------- */
+
+void frontBackSplit(
+					SLLNode *source,
+					SLLNode **frontRef,
+					SLLNode **backRef
+					) {
+	SLLNode *fast_p = source->next;
+	SLLNode *slow_p = source;
+
+	while (fast_p != NULL) {
+		fast_p = fast_p->next;
+		if (fast_p != NULL) {
+			fast_p = fast_p->next;
+			slow_p = slow_p->next;
+		}
+	}
+	/* 'slow' is before the midpoint in the list, so split it in two
+    at that point. */
+
+	*frontRef = source;
+	*backRef = slow_p->next;
+	slow_p->next = NULL;
+	return;
+}
+
+SLLNode *sortedMerge(SLLNode *a, SLLNode *b) {
+
+	if (a == NULL) return(b);
+	if (b == NULL) return(a);
+
+	SLLNode *result;
+	
+	if (mergeCmp(a->data, b->data) == 1) {
+		result = a;
+		result->next = sortedMerge(a->next, b);
+	}
+	else {
+		result = b;
+		result->next = sortedMerge(a, b->next);
+	}
+	
+	return(result);
+}
+
+void mergerSortSLLUtility(SLLNode **headRef) {
+
+	SLLNode *head = *headRef;
+
+	SLLNode *a;
+	SLLNode *b;
+
+	if (head == NULL || head->next == NULL) {
+		return;
+	} 
+
+	frontBackSplit(head, &a, &b);
+
+	mergerSortSLLUtility(&a);
+	mergerSortSLLUtility(&b);
+
+	*headRef = sortedMerge(a, b); 
+}
+
+void mergerSortSLL(SLL *list) {
+
+	mergerSortSLLUtility(&(list->head));
+
+	SLLNode *curr = list->head;
+
+	while (curr->next == NULL) {
+		curr = curr->next;
+	}
+
+	list->tail = curr;
+	return;
+}

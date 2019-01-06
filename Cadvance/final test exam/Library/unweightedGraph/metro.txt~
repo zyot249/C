@@ -1,0 +1,11 @@
+STATIONS
+S1=Vinh
+S2=Hanoi
+S3=Namdinh
+S4=Danang
+S5=Hochiminh
+S6=Hue
+LINES
+M1=S1 S2 S4 S5
+M2=S2 S3 S6 S4
+M3=S4 S5 S7 S1

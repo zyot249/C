@@ -1,0 +1,7 @@
+
+
+
+int *generateRandArray(int nmemb, int size) {
+	int *arr = (int *)malloc();
+	return arr;
+}
