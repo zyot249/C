@@ -145,12 +145,12 @@ void list_graph(Graph graph,int* output){
   jrb_traverse(node,graph.vertices){
     int v = jval_i(node->key);
     name = jrb_find_int(graph.vertices,v);
-    printf("Vertex %s : ",jval_s(name->val));
+    printf("Vertex %d : ",v));
     int n = outdegree(graph,v,output);
     if(n != 0){
       for(int i = 0;i<n;i++){
         name = jrb_find_int(graph.vertices,output[i]);
-        printf("--> %s ",jval_s(name->val));
+        printf("--> %d ",jval_i(name->key));
       }
     }
     printf("\n");

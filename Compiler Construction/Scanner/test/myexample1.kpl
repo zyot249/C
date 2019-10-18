@@ -1,0 +1,16 @@
++
+PROGRAm
+(*Invalid Too Long Number*)
+12321321321321321321321321321321
+-
+(*dm thang vong
+-*)
+(*Invalid symbol*)
++_
+(*Ident too long*)
+helllllllllllllllllllloo
+(*Invalid const char*)
+
+'''
+(*End of comment expected*)
+(*dsadas
