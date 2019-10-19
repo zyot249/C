@@ -1,0 +1,31 @@
+----------------------------------------------------------------------DOCKER-----------------------------------------------------
+docker command:
+sudo usermod -aG docker username
+docker [option] [command] [arguments]
+-- search
+docker search something
+-- download
+docker pull something
+-- see downloaded images
+docker images
+-- run
+docker run -it something
+[-it --> gives you interactive shell access into the container]
+-- manage
+docker ps [-a | -l]
+-- start
+docker start [container_id | name]
+-- stop
+docker stop [container_id | name]
+-- remove
+docker rm [container_id | name]
+-- commiting changes in a container to a docker image
+docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
+-- push to repo
+--- login
+docker login -u docker-registry-username
+--- tag
+docker tag sammy/ubuntu-nodejs docker-registry-username/ubuntu-nodejs
+--- push
+---- push your own image
+docker push docker-registry-username/docker-image-name
